@@ -1,0 +1,75 @@
+name: Lab Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lab-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ShellCheck
+        run: shellcheck --severity=warning scripts/*.sh
+
+  run-lab:
+    name: Run lab on ${{ matrix.os }}
+    needs: lint
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x scripts/*.sh
+
+      - name: Execute lab (Parts 1-4)
+        run: |
+          LAB_PASSWORD="$(openssl rand -base64 18)"
+          echo "::add-mask::${LAB_PASSWORD}"
+          export LAB_PASSWORD
+          sudo --preserve-env=LAB_PASSWORD ./scripts/run_all.sh
+
+      - name: Verify every requirement
+        run: sudo ./scripts/verify.sh | tee evidence/verify_report.txt
+
+      - name: Publish job summary
+        if: always()
+        run: |
+          {
+            echo "### Lab results - ${{ matrix.os }}"
+            echo '```'
+            cat evidence/verify_report.txt 2>/dev/null || echo "verification did not run"
+            echo '```'
+            echo "#### Permission check (ls -l)"
+            echo '```'
+            cat evidence/ls_logs.txt 2>/dev/null || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lab-evidence-${{ matrix.os }}
+          path: evidence/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Clean up lab users
+        if: always()
+        run: sudo ./scripts/cleanup.sh

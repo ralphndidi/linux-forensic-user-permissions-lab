@@ -1,0 +1,5 @@
+2025-03-10 08:05:09 ERROR [sshd] Failed password for root from 203.0.113.45
+2025-03-10 08:05:31 ERROR [sshd] Failed password for root from 203.0.113.45
+2025-03-10 08:15:03 ERROR [kernel] I/O error on device sdb, sector 4096
+2025-03-10 08:25:36 ERROR [apache2] Segmentation fault (core dumped)
+2025-03-10 08:40:02 ERROR [mysql] Connection refused for user01@localhost

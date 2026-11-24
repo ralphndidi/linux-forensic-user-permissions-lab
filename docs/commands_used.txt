@@ -1,0 +1,6 @@
+    1  cd media
+    2  cd /media
+    3  clear
+    4  cd ~
+    5  ls
+    6  cd logs

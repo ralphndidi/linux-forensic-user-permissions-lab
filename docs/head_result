@@ -1,0 +1,5 @@
+2025-03-10 08:00:01 INFO  [system] Boot sequence completed
+2025-03-10 08:01:15 INFO  [sshd] Accepted password for user01 from 192.168.1.10
+2025-03-10 08:02:42 WARNING [disk] Disk usage at 85% on /dev/sda1
+2025-03-10 08:05:09 ERROR [sshd] Failed password for root from 203.0.113.45
+2025-03-10 08:05:31 ERROR [sshd] Failed password for root from 203.0.113.45

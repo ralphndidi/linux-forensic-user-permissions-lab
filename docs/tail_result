@@ -1,0 +1,5 @@
+2025-03-10 08:36:21 INFO  [useradd] New user created: guest_test
+2025-03-10 08:40:02 ERROR [mysql] Connection refused for user01@localhost
+2025-03-10 08:42:19 INFO  [sudo] root : session opened for user root
+2025-03-10 08:45:57 WARNING [fail2ban] Banned IP 203.0.113.45
+2025-03-10 08:50:33 INFO  [system] Scheduled maintenance started
